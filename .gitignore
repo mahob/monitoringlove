@@ -1,0 +1,6 @@
+# Ignore vim swap files
+*.swp
+# Ignore MacOS Desktop Services Store files
+*.DS_Store
+# Ignore vscode project settings
+/.vscode/

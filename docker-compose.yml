@@ -1,0 +1,25 @@
+version: "3"
+services:
+  grafana:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        grafanaversion: 5.0.0-10969pre1
+    command: ["/scripts/wait-for-postgres.sh", "postgres", "--", "/grafana/bin/grafana-server", "web"]
+    ports:
+      - "3000:3000"
+    links:
+      - postgres
+    networks:
+      - monitoringlove
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - monitoringlove
+networks:
+  monitoringlove:
