@@ -19,10 +19,14 @@ RUN wget https://grafana.com/api/plugins/jdbranham-diagram-panel/versions/1.4.4/
     mkdir -p /grafana/plugins && \
     unzip diagram-panel-1.4.4.zip -d /grafana/plugins
 
+# Provision dashboards
+RUN mkdir -p /grafana/conf/provisioning/datasources/
+ADD ./grafana/datasources/* /grafana/conf/provisioning/datasources/
+
 # Provision some dashboards (see http://docs.grafana.org/administration/provisioning/ for details)
-RUN mkdir -p /grafana/provisioning/dashboards
-ADD ./grafana/dashboard-provider.yml /grafana/provisioning/dashboards
-ADD ./grafana/provisioned-dashboards/ /grafana/
+# RUN mkdir -p /grafana/conf/provisioning/dashboards
+# ADD ./grafana/dashboard-provider.yml /grafana/conf/provisioning/dashboards
+# ADD ./grafana/provisioned-dashboards/* /grafana/conf/provisioning/dashboards
 
 COPY /grafana/custom.ini /grafana/conf/custom.ini
 
