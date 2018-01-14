@@ -3,4 +3,4 @@
   folder: ''
   type: file
   options:
-    folder: /grafana/provisioned-dashboards
+    folder: /grafana/conf/provisioning/dashboards

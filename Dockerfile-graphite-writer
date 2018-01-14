@@ -1,0 +1,11 @@
+FROM phusion/baseimage:latest
+
+RUN apt-get update -y
+
+RUN apt-get install -y netcat
+
+RUN mkdir -p /graphite-writer/
+ADD ./graphite-writer/* /graphite-writer/
+RUN chmod +x /graphite-writer/*
+
+WORKDIR /graphte-writer                   

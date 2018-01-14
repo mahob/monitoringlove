@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        grafanaversion: 5.0.0-10969pre1
+        grafanaversion: 5.0.0-11190pre1
     command: ["/scripts/wait-for-postgres.sh", "postgres", "--", "/grafana/bin/grafana-server", "web"]
     ports:
       - "3000:3000"
@@ -13,7 +13,7 @@ services:
       - postgres
       - graphite
     networks:
-      - monitoringlove
+      - default
   postgres:
     build:
       context: .
@@ -21,7 +21,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - monitoringlove
+      - default
   graphite:
     image: graphiteapp/docker-graphite-statsd
     ports:
@@ -30,5 +30,14 @@ services:
       - "2023-2024:2023-2024"
       - "8125:8125/udp"
       - "8126:8126"
+  graphite-writer:
+    build:
+      context: .
+      dockerfile: Dockerfile-graphite-writer
+    command: ["/graphite-writer/write-sin-to-graphite.sh"]
+    links:
+      - graphite
+    networks: 
+      - default
 networks:
-  monitoringlove:
+  default:
