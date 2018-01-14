@@ -8,4 +8,4 @@ After seeing the [Grafana 5 Preview](https://www.youtube.com/watch?v=BC_YRNpqj5k
 - The container writing data to the Graphite container (see [Dockerfile-graphite-writer](https://github.com/mahob/monitoringlove/blob/master/Dockerfile-graphite-writer))
 
 # License
-MIT (see LICENSE)
+MIT (see [LICENSE](https://github.com/mahob/monitoringlove/blob/master/LICENSE))
