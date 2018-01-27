@@ -5,7 +5,15 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        grafanaversion: 5.0.0-11190pre1
+        grafanaversion: 5.0.0-11408pre1
+    environment:
+      - GF_SECURITY_ADMIN_USER=grafanaAdmin
+      - GF_SECURITY_ADMIN_PASSWORD=monitoringLove
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_HOST=postgres:5432
+      - GF_DATABASE_NAME=grafanadb
+      - GF_DATABASE_USER=grafana
+      - GF_DATABASE_PASSSWORD=gra7anaDbSecr3t
     command: ["/scripts/wait-for-postgres.sh", "postgres", "--", "/grafana/bin/grafana-server", "web"]
     ports:
       - "3000:3000"

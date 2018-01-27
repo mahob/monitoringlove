@@ -5,9 +5,21 @@ ARG grafanaversion=5.0.0-11408pre1
 RUN yum update -y && \
     yum install -y wget \
                    libfontconfig \
-                   unzip \
-                   # Required by the wait-for-psostgres.sh script
-                   postgresql
+                   unzip
+
+RUN mkdir /install
+WORKDIR /install/
+
+# Enable the EPEL yum repo
+RUN wget http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
+    rpm -ivh epel-release-latest-7.noarch.rpm
+
+# Enable the Postgresql yum repo
+RUN wget https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm && \
+    rpm -i pgdg-centos95-9.5-3.noarch.rpm
+
+# Required by the wait-for-psostgres.sh script
+RUN yum install -y postgresql95 --enablerepo=pgdg95
 
 # Install grafana
 RUN wget https://s3-us-west-2.amazonaws.com/grafana-releases/master/grafana-${grafanaversion}.linux-x64.tar.gz && \
@@ -19,24 +31,20 @@ RUN wget https://grafana.com/api/plugins/jdbranham-diagram-panel/versions/1.4.4/
     mkdir -p /grafana/plugins && \
     unzip diagram-panel-1.4.4.zip -d /grafana/plugins
 
-# Provision datasources
-RUN mkdir -p /grafana/conf/provisioning/datasources/
-ADD ./grafana/conf/provisioning/datasources/* /grafana/conf/provisioning/datasources/
+RUN rm -rf /install
 
-# Provision some dashboards (see http://docs.grafana.org/administration/provisioning/ for details)
-# RUN mkdir -p /grafana/conf/provisioning/dashboards && \
-#     mkdir -p /grafana/custom/dashboards
-# ADD ./grafana/conf/provisioning/dashboards/* /grafana/conf/provisioning/dashboards
-# ADD ./grafana/dashboards/* /grafana/dashboards/
-
-RUN echo "==> content of /grafana/conf" && \
-    find /grafana/conf -type f -exec cat {} \;
-
+# Add custom configuration
 ADD ./grafana/conf/custom.ini /grafana/conf/custom.ini
+
+# Provision datasources & dashboards (see http://docs.grafana.org/administration/provisioning/ for details)
+RUN find /grafana/conf/provisioning/ -type f -exec rm -r {} \;
+ADD ./grafana/conf/provisioning/dashboards/* /grafana/conf/provisioning/dashboards/
+ADD ./grafana/conf/provisioning/datasources/* /grafana/conf/provisioning/datasources/
+ADD ./grafana/dashboards/* /grafana/dashboards/
 
 # Wait for postgres
 RUN mkdir -p /scripts/
-COPY ./grafana/scripts/wait-for-postgres.sh /scripts/wait-for-postgres.sh
+ADD ./grafana/scripts/wait-for-postgres.sh /scripts/wait-for-postgres.sh
 RUN chmod +x /scripts/wait-for-postgres.sh
 
 WORKDIR /grafana
