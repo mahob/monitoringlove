@@ -39,5 +39,7 @@ services:
       - graphite
     networks: 
       - default
+    depends_on:
+      - graphite
 networks:
   default:

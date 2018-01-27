@@ -1,8 +1,7 @@
-FROM phusion/baseimage:latest
+FROM centos:latest
 
-RUN apt-get update -y
-
-RUN apt-get install -y netcat
+RUN yum update -y && \
+    yum install -y nmap-ncat
 
 RUN mkdir -p /graphite-writer/
 ADD ./graphite-writer/* /graphite-writer/
