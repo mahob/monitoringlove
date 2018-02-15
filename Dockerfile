@@ -26,11 +26,19 @@ RUN wget https://s3-us-west-2.amazonaws.com/grafana-releases/master/grafana-${gr
     tar -zxvf grafana-${grafanaversion}.linux-x64.tar.gz && \
     mv ./grafana-${grafanaversion} /grafana
 
+# Install plugins
+RUN mkdir -p /grafana/plugins
+
 # Add the diagram-panel plugin
 RUN wget https://grafana.com/api/plugins/jdbranham-diagram-panel/versions/1.4.4/download -O diagram-panel-1.4.4.zip && \
-    mkdir -p /grafana/plugins && \
     unzip diagram-panel-1.4.4.zip -d /grafana/plugins
 
+# Add the D3 gauge panel
+# --- NOT SSUPPORTED FOR GRAFANA VERSION >= 5.0.0 ---
+# RUN wget https://grafana.com/api/plugins/briangann-gauge-panel/versions/0.0.4/download -O d3-gauge-panel-0.0.4.zip && \
+#     unzip d3-gauge-panel-0.0.4.zip -d /grafana/plugins
+
+# Clean up all downloads
 RUN rm -rf /install
 
 # Add custom configuration
@@ -40,6 +48,7 @@ ADD ./grafana/conf/custom.ini /grafana/conf/custom.ini
 RUN find /grafana/conf/provisioning/ -type f -exec rm -r {} \;
 ADD ./grafana/conf/provisioning/dashboards/* /grafana/conf/provisioning/dashboards/
 ADD ./grafana/conf/provisioning/datasources/* /grafana/conf/provisioning/datasources/
+RUN mkdir -p /grafana/dashboards/
 ADD ./grafana/dashboards/* /grafana/dashboards/
 
 # Wait for postgres
