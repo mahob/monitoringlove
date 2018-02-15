@@ -14,10 +14,11 @@ services:
       - GF_DATABASE_NAME=grafanadb
       - GF_DATABASE_USER=grafana
       - GF_DATABASE_PASSSWORD=gra7anaDbSecr3t
+      # - GF_LOG_LEVEL=debug
     command: ["/scripts/wait-for-postgres.sh", "postgres", "--", "/grafana/bin/grafana-server", "web"]
     ports:
       - "3000:3000"
-    links:
+    depends_on:
       - postgres
       - graphite
     networks:
@@ -43,8 +44,6 @@ services:
       context: .
       dockerfile: Dockerfile-graphite-writer
     command: ["/graphite-writer/write-sin-to-graphite.sh"]
-    links:
-      - graphite
     networks: 
       - default
     depends_on:
