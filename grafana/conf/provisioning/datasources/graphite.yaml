@@ -1,5 +1,7 @@
+apiVersion: 1
+
 # list of datasources that should be deleted from the database
-delete_datasources:
+deleteDatasources:
   - name: graphite
     org_id: 1
   - name: Graphite
@@ -11,21 +13,21 @@ delete_datasources:
 # whats available in the datbase
 datasources:
   # <string, required> name of the datasource. Required
-- name: graphite
+- name: graphite-v1
   # <string, required> datasource type. Required
   type: graphite
   # <string, required> access mode. direct or proxy. Required
-  access: direct
+  access: proxy
   # <int> org id. will default to org_id 1 if not specified
   org_id: 1
   # <string> url
   url: http://graphite:80
   # <string> database password, if used
-  password: gra7anaDbSecr3t
-  # <string> database user, if used
-  user: grafana
-  # <string> database name, if used
-  database: grafanadb
+  # password: gra7anaDbSecr3t
+  # # <string> database user, if used
+  # user: grafana
+  # # <string> database name, if used
+  # database: grafanadb
   # <bool> enable/disable basic auth
   basic_auth: false
   # <string> basic auth username
@@ -38,7 +40,7 @@ datasources:
   is_default: true
   # <map> fields that will be converted to json and stored in json_data
   json_data: 
-     graphiteVersion: "1.1.1"
+     graphiteVersion: "1.1"
      tlsAuth: false
      tlsAuthWithCACert: false
   # <string> json object of data that will be encrypted.

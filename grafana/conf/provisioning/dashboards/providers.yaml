@@ -1,6 +1,9 @@
-- name: 'default'
+apiVersion: 1
+
+providers:
+- name: ''
   org_id: 1
-  folder: 'provisioned'
+  folder: ''
   type: file
   options:
     path: /grafana/dashboards/
