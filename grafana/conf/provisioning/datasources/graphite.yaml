@@ -19,7 +19,7 @@ datasources:
   # <int> org id. will default to org_id 1 if not specified
   org_id: 1
   # <string> url
-  url: http://localhost:80
+  url: http://graphite:80
   # <string> database password, if used
   password: gra7anaDbSecr3t
   # <string> database user, if used
