@@ -18,6 +18,62 @@
   "links": [],
   "panels": [
     {
+      "alert": {
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "max"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                -1
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "or"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "min"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "frequency": "60s",
+        "handler": 1,
+        "name": "Graphite: Sinus alert",
+        "noDataState": "no_data",
+        "notifications": []
+      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -26,7 +82,7 @@
       "fill": 1,
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 0
       },
@@ -42,6 +98,7 @@
       },
       "lines": true,
       "linewidth": 1,
+      "links": [],
       "nullPointMode": "null",
       "percentage": false,
       "pointradius": 5,
@@ -53,14 +110,23 @@
       "steppedLine": false,
       "targets": [
         {
+          "$$hashKey": "object:474",
           "refId": "A",
           "target": "seriesByTag('foo=bar')"
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 1
+        }
+      ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Graphite: Sinus",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -76,14 +142,16 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:539",
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
-          "min": null,
+          "max": "1.1",
+          "min": "-1.1",
           "show": true
         },
         {
+          "$$hashKey": "object:540",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -131,6 +199,6 @@
     ]
   },
   "timezone": "",
-  "title": "graphite-sinus",
-  "version": 1
+  "title": "graphite-sinus-new",
+  "version": 3
 }
