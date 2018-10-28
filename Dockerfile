@@ -1,6 +1,6 @@
 FROM centos:latest
 
-ARG grafanaversion=5.0.0-11408pre1
+ARG grafanaversion=5.0.4
 
 RUN yum update -y && \
     yum install -y wget \
@@ -22,7 +22,7 @@ RUN wget https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-7-x86_64/
 RUN yum install -y postgresql95 --enablerepo=pgdg95
 
 # Install grafana
-RUN wget https://s3-us-west-2.amazonaws.com/grafana-releases/master/grafana-${grafanaversion}.linux-x64.tar.gz && \
+RUN wget https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-${grafanaversion}.linux-x64.tar.gz && \
     tar -zxvf grafana-${grafanaversion}.linux-x64.tar.gz && \
     mv ./grafana-${grafanaversion} /grafana
 

@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        grafanaversion: 5.0.0-11790beta1
+        grafanaversion: 5.0.4
     environment:
       - GF_SECURITY_ADMIN_USER=grafanaAdmin
       - GF_SECURITY_ADMIN_PASSWORD=monitoringLove
