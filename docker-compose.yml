@@ -1,11 +1,28 @@
 version: "3"
 services:
+  zabbix:
+    image: zabbix/zabbix-server-pgsql:alpine-3.4-latest
+    environment: 
+      - DB_SERVER_HOST=postgres
+      - POSTGRES_USER=zabbix 
+      - POSTGRES_PASSWORD=zabb1xDbSecr3t
+    depends_on: 
+      - postgres
+  zabbixweb:
+    image: zabbix/zabbix-web-apache-pgsql:alpine-3.4-latest
+    environment:
+      - DB_SERVER_HOST=postgres
+      - POSTGRES_USER=zabbixweb
+      - POSTGRES_PASSWORD=zabb1xWebDbSecr3t
+      - ZBX_SERVER_HOST=zabbix
+      - PHP_TZ=Europe/Berlin 
+    depends_on:
+      - postgres
+      - zabbix
+    networks:
+      - default
   grafana:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        grafanaversion: 5.0.0-11790beta1
+    image: grafana/grafana:5.2.2
     environment:
       - GF_SECURITY_ADMIN_USER=grafanaAdmin
       - GF_SECURITY_ADMIN_PASSWORD=monitoringLove
@@ -14,6 +31,7 @@ services:
       - GF_DATABASE_NAME=grafanadb
       - GF_DATABASE_USER=grafana
       - GF_DATABASE_PASSSWORD=gra7anaDbSecr3t
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
       # - GF_LOG_LEVEL=debug
     command: ["/scripts/wait-for-postgres.sh", "postgres", "--", "/grafana/bin/grafana-server", "web"]
     ports:
@@ -21,12 +39,25 @@ services:
     depends_on:
       - postgres
       - graphite
+      - zabbix
     networks:
       - default
   postgres:
     build:
       context: .
-      dockerfile: Dockerfile-postgres
+      dockerfile: postgres/Dockerfile
+    environment:
+      - POSTGRES_USER=postgres_admin
+      # - POSTGRES_PASSWORD=p0stgr3sA6m1n
+      - GRAFANA_DB_NAME=grafanadb
+      - GRAFANA_DB_USER=grafana
+      - GRAFANA_DB_PASSSWORD=gra7anaDbSecr3t
+      - ZABBIX_DB_NAME=zabbixdb
+      - ZABBIX_DB_USER=zabbix
+      - ZABBIX_DB_PASSSWORD=zabb1xDbSecr3t
+      - ZABBIXWEB_DB_NAME=zabbixwebdb
+      - ZABBIXWEB_DB_USER=zabbixweb
+      - ZABBIXWEB_DB_PASSSWORD=zabb1xWebDbSecr3t
     ports:
       - "5432:5432"
     networks:
