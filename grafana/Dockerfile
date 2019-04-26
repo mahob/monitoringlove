@@ -1,6 +1,7 @@
 FROM centos:latest
 
-ARG grafanaversion=5.0.0-11408pre1
+ARG grafanaversion=6.1.4
+ENV grafanaarchivename=grafana-${grafanaversion}.linux-amd64.tar.gz
 
 RUN yum update -y && \
     yum install -y wget \
@@ -22,8 +23,8 @@ RUN wget https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-7-x86_64/
 RUN yum install -y postgresql95 --enablerepo=pgdg95
 
 # Install grafana
-RUN wget https://s3-us-west-2.amazonaws.com/grafana-releases/master/grafana-${grafanaversion}.linux-x64.tar.gz && \
-    tar -zxvf grafana-${grafanaversion}.linux-x64.tar.gz && \
+RUN wget https://dl.grafana.com/oss/release/${grafanaarchivename} && \
+    tar -zxvf ${grafanaarchivename} && \
     mv ./grafana-${grafanaversion} /grafana
 
 # Install plugins
@@ -42,18 +43,18 @@ RUN wget https://grafana.com/api/plugins/jdbranham-diagram-panel/versions/1.4.4/
 RUN rm -rf /install
 
 # Add custom configuration
-ADD ./grafana/conf/custom.ini /grafana/conf/custom.ini
+ADD ./conf/custom.ini /grafana/conf/custom.ini
 
 # Provision datasources & dashboards (see http://docs.grafana.org/administration/provisioning/ for details)
 RUN find /grafana/conf/provisioning/ -type f -exec rm -r {} \;
-ADD ./grafana/conf/provisioning/dashboards/* /grafana/conf/provisioning/dashboards/
-ADD ./grafana/conf/provisioning/datasources/* /grafana/conf/provisioning/datasources/
+ADD ./conf/provisioning/dashboards/* /grafana/conf/provisioning/dashboards/
+ADD ./conf/provisioning/datasources/* /grafana/conf/provisioning/datasources/
 RUN mkdir -p /grafana/dashboards/
-ADD ./grafana/dashboards/* /grafana/dashboards/
+ADD ./dashboards/* /grafana/dashboards/
 
 # Wait for postgres
 RUN mkdir -p /scripts/
-ADD ./grafana/scripts/wait-for-postgres.sh /scripts/wait-for-postgres.sh
+ADD ./scripts/wait-for-postgres.sh /scripts/wait-for-postgres.sh
 RUN chmod +x /scripts/wait-for-postgres.sh
 
 WORKDIR /grafana
