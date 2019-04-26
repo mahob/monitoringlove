@@ -2,10 +2,10 @@ version: "3"
 services:
   grafana:
     build:
-      context: .
+      context: ./grafana/
       dockerfile: Dockerfile
       args:
-        grafanaversion: 5.0.0-11790beta1
+        grafanaversion: 6.1.4
     environment:
       - GF_SECURITY_ADMIN_USER=grafanaAdmin
       - GF_SECURITY_ADMIN_PASSWORD=monitoringLove
@@ -25,8 +25,8 @@ services:
       - default
   postgres:
     build:
-      context: .
-      dockerfile: Dockerfile-postgres
+      context: ./postgres/
+      dockerfile: Dockerfile
     ports:
       - "5432:5432"
     networks:
@@ -41,8 +41,8 @@ services:
       - "8126:8126"
   graphite-writer:
     build:
-      context: .
-      dockerfile: Dockerfile-graphite-writer
+      context: ./graphite-writer/
+      dockerfile: Dockerfile
     command: ["/graphite-writer/write-sin-to-graphite.sh"]
     networks: 
       - default
