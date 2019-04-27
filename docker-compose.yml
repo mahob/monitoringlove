@@ -15,6 +15,7 @@ services:
       - GF_DATABASE_USER=grafana
       - GF_DATABASE_PASSSWORD=gra7anaDbSecr3t
       # - GF_LOG_LEVEL=debug
+      - GF_PANELS_ENABLE_ALPHA=true
     command: ["/scripts/wait-for-postgres.sh", "postgres", "--", "/grafana/bin/grafana-server", "web"]
     ports:
       - "3000:3000"
